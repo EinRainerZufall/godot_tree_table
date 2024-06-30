@@ -1,5 +1,4 @@
 @tool
-
 extends Control
 
 signal CLICK_CELL_DATE(cell:String)
