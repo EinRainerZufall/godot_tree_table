@@ -6,13 +6,22 @@ signal CLICK_CELL_POS(pos:Vector2i)
 signal CLICK_ROW(row:Array)
 signal CLICK_ROW_INDEX(index:int)
 
+
 var tree:Tree
 var tree_root:TreeItem
 var background:Panel
 
 
+var original_table:Array[Array]
+var sort_mode_ascending:bool = true
+var alternate_bg_color:Color
+var alternate_font_color:Color
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	tree.column_title_clicked.connect(on_column_title_clicked)
+	
 	tree.cell_selected.connect(get_cell_data)
 	tree.cell_selected.connect(get_cell_pos)
 	tree.item_selected.connect(get_row_data)
@@ -42,14 +51,23 @@ func set_header(header_row:Array[String]) -> void:
 		tree.set_column_title_alignment(i, HORIZONTAL_ALIGNMENT_LEFT)
 
 
-func set_rows(rows:Array[Array], header_size:int) -> void:
+func set_table(table:Array[Array], header_size:int) -> void:
 	tree.clear()
 	tree_root = tree.create_item()
 	tree.hide_root = true
-	for row:int in rows.size():
+	for row:int in table.size():
 		var item:TreeItem = tree.create_item(tree_root)
 		for column:int in header_size:
-			item.set_text(column, str(rows[row][column]))
+			item.set_text(column, str(table[row][column]))
+			# if odd than chenge the normal StyleBox
+			if row & 1:
+				for i:int in header_size:
+					item.set_custom_bg_color(i, alternate_bg_color, false)
+					item.set_custom_color(i, alternate_font_color)
+
+
+func set_original_table(table:Array[Array]) -> void:
+	original_table = table.duplicate(true)
 
 
 func set_stylebox_background(stylebox:StyleBox) -> void:
@@ -112,6 +130,22 @@ func set_table_font(font:Font) -> void:
 	tree.remove_theme_font_override("font")
 
 
+func set_alternate_bg_color(color:Color) -> void:
+	if color:
+		alternate_bg_color = color
+	else:
+		alternate_bg_color = background.get_theme_stylebox("panel").bg_color
+	set_table(original_table, tree.columns)
+
+
+func set_alternate_font_color(color:Color) -> void:
+	if color:
+		alternate_font_color = color
+	else:
+		alternate_font_color = tree.get_theme_color("font_color")
+	set_table(original_table, tree.columns)
+
+
 func set_table_font_color(color:Color) -> void:
 	if color:
 		tree.add_theme_color_override("font_color", color)
@@ -137,6 +171,7 @@ func set_allow_reselect(reselect:bool) -> void:
 	tree.allow_reselect = reselect
 
 
+# -- signal functions --
 func get_cell_data() -> void:
 	CLICK_CELL_DATE.emit(tree.get_selected().get_text(tree.get_selected_column()))
 
@@ -163,3 +198,35 @@ func get_row_index() -> void:
 	result = tree.get_root().get_children().find(tree.get_selected())
 	
 	CLICK_ROW_INDEX.emit(result)
+
+
+func on_column_title_clicked(column:int, mouse_button_index:int) -> void:
+	if mouse_button_index == MOUSE_BUTTON_LEFT or mouse_button_index == MOUSE_BUTTON_RIGHT:
+		var sorted_table:Array[Array] = original_table.duplicate(true)
+		match mouse_button_index:
+			MOUSE_BUTTON_LEFT:
+				if sort_mode_ascending:
+					sorted_table.sort_custom(custom_sorter_ascending.bind(column))
+				else:
+					sorted_table.sort_custom(custom_sorter_descending.bind(column))
+				sort_mode_ascending = !sort_mode_ascending
+				set_table(sorted_table, tree.columns)
+			MOUSE_BUTTON_RIGHT:
+				sort_mode_ascending = true
+				set_table(original_table, tree.columns)
+
+
+# -- custom sorter --
+static func custom_sorter_ascending(a, b, column:int) -> bool:
+	if a[column] == "----":
+		return false
+	if a[column] <= b[column]:
+		return true
+	return false
+
+static func custom_sorter_descending(a, b, column:int) -> bool:
+	if a[column] == "----":
+		return false
+	if a[column] >= b[column]:
+		return true
+	return false

@@ -11,7 +11,7 @@ signal CLICK_ROW_INDEX(index:int)
 # user settings
 @export var header_row:Array[String]: set = _set_header_row
 @export var header_width:Array[int]: set = _set_header_width
-@export var rows:Array[Array]: set = set_rows
+@export var table:Array[Array]: set = set_table
 @export var table_select_mode:select_mode = select_mode.ROW: set = _set_table_select_mode
 @export var table_allow_reselect:bool = false: set = _set_table_allow_reselect
 @export_group("Header")
@@ -20,6 +20,8 @@ signal CLICK_ROW_INDEX(index:int)
 @export var header_stylebox_hover:StyleBox: set = _set_header_stylebox_hover
 @export_group("Table")
 @export var background_stylebox:StyleBox: set = _set_stylebox_background
+@export var alternate_bg_color:Color: set = _set_alternate_bg_color
+@export var alternate_font_color:Color: set = _set_alternate_font_color
 @export_group("Font")
 @export var header_font:Font: set = _set_header_font
 @export var header_font_color:Color: set = _set_header_font_color
@@ -60,47 +62,48 @@ func _process(_delta) -> void:
 	pass
 
 ## Sets the entire table to the passed array, shortens or expands the inner arrays if necessary
-func set_rows(new_rows:Array[Array]) -> void:
-	for row in new_rows:
-		var row_columns = row.size()
-		var header_columns = header_row.size()
+func set_table(new_table:Array[Array]) -> void:
+	for row:Array in new_table:
+		var row_columns:int = row.size()
+		var header_columns:int = header_row.size()
 		if row_columns > header_columns:
 			row.resize(header_columns)
 		elif row_columns < header_columns:
-			for index in range(header_columns - row_columns):
-				row.push_back("---")
-	rows = new_rows
+			row.resize(header_columns)
+			for i:int in row.size():
+				if typeof(row[i]) == TYPE_NIL:
+					row[i] = "----"
+	table = new_table
 	
-	tableContainer.set_rows(rows, header_row.size())
+	tableContainer.set_original_table(table)
+	tableContainer.set_table(table, header_row.size())
 
 ## Adds the passed array to the table, shortens or extends it if necessary 
 func add_row(new_row:Array) -> void:
-	rows.append(new_row)
-	set_rows(rows)
+	table.append(new_row)
+	set_table(table)
 
 ## Deletes the last row of the table, true if it deleted something, otherwise false, returns no errors
 func remove_last_row() -> bool:
-	if rows.size() == 0:
+	if table.size() == 0:
 		return false
-	rows.remove_at(rows.size() - 1)
-	set_rows(rows)
+	table.remove_at(table.size() - 1)
+	set_table(table)
 	return true
 
 ## Deletes the row on the passed index, counted from the end if the index is negative
 func remove_row_at(index:int) -> void:
-	if index >= rows.size():
-		push_error("Error: Index pos = %d is out of bounds (size() = %d)." % [index, rows.size()])
+	if index >= table.size():
+		push_error("Error: Index pos = %d is out of bounds (size() = %d)." % [index, table.size()])
 		return
 	if index < 0:
-		rows.remove_at(rows.size() + index)
+		table.remove_at(table.size() + index)
 	else:
-		rows.remove_at(index)
-	set_rows(rows)
+		table.remove_at(index)
+	set_table(table)
 
 
 # -- Inernal funtions --
-
-
 func _set_header_row(value:Array[String]) -> void:
 	header_row = value
 	tableContainer.set_header(header_row)
@@ -150,6 +153,16 @@ func _set_header_font_size(value:int) -> void:
 	tableContainer.set_header_font_size(header_font_size)
 
 
+func _set_alternate_bg_color(value:Color) -> void:
+	alternate_bg_color = value
+	tableContainer.set_alternate_bg_color(alternate_bg_color)
+
+
+func _set_alternate_font_color(value:Color) -> void:
+	alternate_font_color = value
+	tableContainer.set_alternate_font_color(alternate_font_color)
+
+
 func _set_table_font(value:Font) -> void:
 	table_font = value
 	tableContainer.set_table_font(table_font)
@@ -181,16 +194,14 @@ func _set_table_allow_reselect(value:bool) -> void:
 
 
 # -- signal functions --
-
-
 func _on_click_cell_data(result:String) -> void:
-	emit_signal("CLICK_CELL_DATE", result)
+	CLICK_CELL_DATE.emit(result)
 
 func _on_click_row(result:Array) -> void:
-	emit_signal("CLICK_ROW", result)
+	CLICK_ROW.emit(result)
 
 func _on_click_cell_pos(result:Vector2i) -> void:
-	emit_signal("CLICK_CELL_POS", result)
+	CLICK_CELL_POS.emit(result)
 
 func _on_click_row_index(result:int) -> void:
-	emit_signal("CLICK_ROW_INDEX", result)
+	CLICK_ROW_INDEX.emit(result)
