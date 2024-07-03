@@ -10,24 +10,27 @@ signal CLICK_ROW_INDEX(index:int)
 
 # user settings
 @export var header_row:Array[String]: set = _set_header_row
+## The custom minimum width of the header columns, at 0 the width is automatically adjusted to the text length
 @export var header_width:Array[int]: set = _set_header_width
 @export var table:Array[Array]: set = set_table
 @export var table_select_mode:select_mode = select_mode.ROW: set = _set_table_select_mode
 @export var table_allow_reselect:bool = false: set = _set_table_allow_reselect
+## If active, the _ready function checks whether 'table' has changed, if yes, the table is reloaded
+@export var auto_reload:bool = false
 @export_group("Header")
 @export var header_stylebox_normal:StyleBox: set = _set_header_stylebox_normal
 @export var header_stylebox_pressed:StyleBox: set = _set_header_stylebox_pressed
 @export var header_stylebox_hover:StyleBox: set = _set_header_stylebox_hover
 @export_group("Table")
 @export var background_stylebox:StyleBox: set = _set_stylebox_background
-@export var alternate_bg_color:Color: set = _set_alternate_bg_color
-@export var alternate_font_color:Color: set = _set_alternate_font_color
 @export_group("Font")
 @export var header_font:Font: set = _set_header_font
 @export var header_font_color:Color: set = _set_header_font_color
+## Sets the font size of the table header, if 0 then the default size is used
 @export_range(0, 1, 1, "or_greater") var header_font_size:int: set = _set_header_font_size
 @export var table_font:Font: set = _set_table_font
 @export var table_font_color:Color: set = _set_table_font_color
+## Sets the font size of the table, if 0 then the default size is used
 @export_range(0, 1, 1, "or_greater") var table_font_size:int: set = _set_table_font_size
 
 
@@ -59,7 +62,9 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta) -> void:
-	pass
+	if auto_reload:
+		tableContainer.auto_reload(table)
+
 
 ## Sets the entire table to the passed array, shortens or expands the inner arrays if necessary
 func set_table(new_table:Array[Array]) -> void:
@@ -101,6 +106,10 @@ func remove_row_at(index:int) -> void:
 	else:
 		table.remove_at(index)
 	set_table(table)
+
+## Reloads the table
+func reload_table() -> void:
+	tableContainer.reload_table(table)
 
 
 # -- Inernal funtions --
@@ -151,16 +160,6 @@ func _set_header_font_color(value:Color) -> void:
 func _set_header_font_size(value:int) -> void:
 	header_font_size = value
 	tableContainer.set_header_font_size(header_font_size)
-
-
-func _set_alternate_bg_color(value:Color) -> void:
-	alternate_bg_color = value
-	tableContainer.set_alternate_bg_color(alternate_bg_color)
-
-
-func _set_alternate_font_color(value:Color) -> void:
-	alternate_font_color = value
-	tableContainer.set_alternate_font_color(alternate_font_color)
 
 
 func _set_table_font(value:Font) -> void:

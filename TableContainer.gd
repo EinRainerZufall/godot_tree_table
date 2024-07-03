@@ -11,11 +11,8 @@ var tree:Tree
 var tree_root:TreeItem
 var background:Panel
 
-
 var original_table:Array[Array]
 var sort_mode_ascending:bool = true
-var alternate_bg_color:Color
-var alternate_font_color:Color
 
 
 # Called when the node enters the scene tree for the first time.
@@ -59,11 +56,15 @@ func set_table(table:Array[Array], header_size:int) -> void:
 		var item:TreeItem = tree.create_item(tree_root)
 		for column:int in header_size:
 			item.set_text(column, str(table[row][column]))
-			# if odd than chenge the normal StyleBox
-			if row & 1:
-				for i:int in header_size:
-					item.set_custom_bg_color(i, alternate_bg_color, false)
-					item.set_custom_color(i, alternate_font_color)
+
+
+func reload_table(table:Array[Array]) -> void:
+	set_table(table, tree.columns)
+
+
+func auto_reload(table:Array[Array]) -> void:
+	if table != original_table:
+		set_table(table, tree.columns)
 
 
 func set_original_table(table:Array[Array]) -> void:
@@ -128,22 +129,6 @@ func set_table_font(font:Font) -> void:
 		tree.add_theme_font_override("font", font)
 		return
 	tree.remove_theme_font_override("font")
-
-
-func set_alternate_bg_color(color:Color) -> void:
-	if color:
-		alternate_bg_color = color
-	else:
-		alternate_bg_color = background.get_theme_stylebox("panel").bg_color
-	set_table(original_table, tree.columns)
-
-
-func set_alternate_font_color(color:Color) -> void:
-	if color:
-		alternate_font_color = color
-	else:
-		alternate_font_color = tree.get_theme_color("font_color")
-	set_table(original_table, tree.columns)
 
 
 func set_table_font_color(color:Color) -> void:
