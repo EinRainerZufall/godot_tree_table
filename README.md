@@ -3,7 +3,7 @@
 A simple table node with built-in sorter
  
 To add:  `Control/Container/PanelContainer/Table`
-### ![](https://github.com/EinRainerZufall/godot_tree_table/blob/main/images/preview1.png)
+### ![](https://github.com/EinRainerZufall/godot_tree_table/blob/main/addons/godot_tree_table/images/preview1.png)
 
 ## Sorter
 The built-in sorter is activated by left-clicking on the corresponding header column and toggles between ascending and descending. Right-click to return to the original order. Empty cells are created as "----" and  are always at the end of the table when sorting.
