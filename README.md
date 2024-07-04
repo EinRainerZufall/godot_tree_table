@@ -50,5 +50,3 @@ signal CLICK_ROW_INDEX(index:int)
 ```
 The CELL signals are only available if the `table_select_mode` is set to Cell
 
-
-## [Demo project](https://github.com/EinRainerZufall/godot_tree_table_demo)
