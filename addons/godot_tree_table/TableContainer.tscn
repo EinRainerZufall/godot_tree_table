@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=3 uid="uid://ul7sjn77s6dl"]
+
+[ext_resource type="Script" path="res://addons/godot_tree_table/TableContainer.gd" id="1_xwaql"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7aqfw"]
+bg_color = Color(0.18, 0.18, 0.18, 1)
+
+[node name="TableContainer" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 200.0
+offset_bottom = 200.0
+script = ExtResource("1_xwaql")
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_7aqfw")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Background"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Tree" type="Tree" parent="Background/ScrollContainer"]
+clip_contents = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+column_titles_visible = true
+allow_search = false
+hide_folding = true
+enable_recursive_folding = false
+hide_root = true
+select_mode = 1
