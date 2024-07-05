@@ -2,7 +2,8 @@
 * text=auto
 
 # Only include the addons folder when downloading from the Asset Library.
-/**                             export-ignore
-addons/godot_tree_table/images  export-ignore
-/addons                         !export-ignore
-/addons/**                      !export-ignore
+/**                                 export-ignore
+addons/godot_tree_table/images/**   export-ignore
+addons/godot_tree_table/images      export-ignore
+/addons                             !export-ignore
+/addons/**                          !export-ignore
