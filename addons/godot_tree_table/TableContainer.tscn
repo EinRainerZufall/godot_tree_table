@@ -40,3 +40,8 @@ hide_folding = true
 enable_recursive_folding = false
 hide_root = true
 select_mode = 1
+
+[node name="SorterArrowManager" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

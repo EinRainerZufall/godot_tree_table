@@ -47,7 +47,7 @@ signal DOUBLE_CLICK(pos:Vector2i, key:Key)
 
 
 
-const TableContainer = preload("res://addons/godot_tree_table/TableContainer.gd")
+const TableContainer:GDScript = preload("res://addons/godot_tree_table/TableContainer.gd")
 var preload_tableContainer:PackedScene = preload("res://addons/godot_tree_table/TableContainer.tscn")
 
 var tableContainer:TableContainer

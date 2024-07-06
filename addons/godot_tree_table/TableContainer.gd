@@ -11,10 +11,16 @@ signal DOUBLE_CLICK(pos:Vector2i, key:Key)
 var tree:Tree
 var tree_root:TreeItem
 var background:Panel
+var sam:Control
 
 var original_table:Array[Array]
 var sort_mode_ascending:bool = true
 
+
+const SorterArrow:GDScript = preload("res://addons/godot_tree_table/SorterArrow.gd")
+var preload_sorterArrow:PackedScene = preload("res://addons/godot_tree_table/SorterArrow.tscn")
+
+var sorterArrow:SorterArrow
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -25,6 +31,8 @@ func _ready() -> void:
 	tree.item_selected.connect(get_row_data)
 	tree.item_selected.connect(get_row_index)
 	tree.item_activated.connect(get_cell_pos_double_click)
+	
+	set_sorter_arrow_position()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -35,6 +43,7 @@ func _process(_delta) -> void:
 func _init_tree() -> void:
 	tree = $Background/ScrollContainer/Tree
 	background = $Background
+	sam = $SorterArrowManager
 
 
 func set_header(header_row:Array[String]) -> void:
@@ -58,6 +67,7 @@ func set_table(table:Array[Array], header_size:int) -> void:
 		var item:TreeItem = tree.create_item(tree_root)
 		for column:int in header_size:
 			item.set_text(column, str(table[row][column]))
+			item.set_autowrap_mode(column, TextServer.AUTOWRAP_WORD)
 
 
 func reload_table(table:Array[Array]) -> void:
@@ -103,6 +113,18 @@ func set_header_stylebox_hover(stylebox:StyleBox) -> void:
 
 func set_header_width(column:int, width:int) -> void:
 	tree.set_column_custom_minimum_width(column, width)
+
+
+func set_sorter_arrow_position() -> void:
+	var total_position:int = 0
+	for i:int in tree.columns:
+		print("inc. pos: ", tree.get_column_width(i))
+		sorterArrow = preload_sorterArrow.instantiate()
+		sam.add_child(sorterArrow)
+		total_position += tree.get_column_width(i)
+		print("total position: ", total_position)
+		sam.get_child(i).position.x = total_position
+		sam.get_child(i).position.y = tree.get_theme_font_size("title_button_font_size") + 4
 
 
 func set_header_font(font:Font) -> void:
