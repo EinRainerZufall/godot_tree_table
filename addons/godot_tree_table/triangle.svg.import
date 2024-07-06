@@ -2,17 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfk0mnfbpd8xq"
-path="res://.godot/imported/icon.svg-d2ffd49cb7407a693b15e2269fd62b90.ctex"
+uid="uid://xgvbmvs04wyh"
+path="res://.godot/imported/triangle.svg-d986dd29dc69442bcfc90e34c582d976.ctex"
 metadata={
-"has_editor_variant": true,
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/godot_tree_table/icon.svg"
-dest_files=["res://.godot/imported/icon.svg-d2ffd49cb7407a693b15e2269fd62b90.ctex"]
+source_file="res://addons/godot_tree_table/triangle.svg"
+dest_files=["res://.godot/imported/triangle.svg-d986dd29dc69442bcfc90e34c582d976.ctex"]
 
 [params]
 
@@ -34,5 +33,5 @@ process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
 svg/scale=1.0
-editor/scale_with_editor_scale=true
-editor/convert_colors_with_editor_theme=true
+editor/scale_with_editor_scale=false
+editor/convert_colors_with_editor_theme=false

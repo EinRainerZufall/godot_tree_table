@@ -35,7 +35,7 @@ signal CLICK_ROW_INDEX(index:int)
 
 
 
-const TableContainer = preload("res://addons/godot_tree_table/TableContainer.gd")
+const TableContainer:GDScript = preload("res://addons/godot_tree_table/TableContainer.gd")
 var preload_tableContainer:PackedScene = preload("res://addons/godot_tree_table/TableContainer.tscn")
 
 var tableContainer:TableContainer

@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://co2iq7v85errb"]
+
+[ext_resource type="Script" path="res://addons/godot_tree_table/SorterArrow.gd" id="1_sxhhh"]
+[ext_resource type="Texture2D" uid="uid://xgvbmvs04wyh" path="res://addons/godot_tree_table/triangle.svg" id="2_gccpm"]
+
+[node name="SorterDirection" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_sxhhh")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -16.0
+offset_top = -8.0
+offset_bottom = 8.0
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("2_gccpm")
+stretch_mode = 2
