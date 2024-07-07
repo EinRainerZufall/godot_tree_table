@@ -124,7 +124,7 @@ func set_sorter_arrow_position() -> void:
 		total_position += tree.get_column_width(i)
 		print("total position: ", total_position)
 		sam.get_child(i).position.x = total_position
-		sam.get_child(i).position.y = tree.get_theme_font_size("title_button_font_size") + 4
+		sam.get_child(i).position.y = tree.get_theme_font_size("title_button_font_size") + 4 #FIXME Magic number
 
 
 func set_header_font(font:Font) -> void:
