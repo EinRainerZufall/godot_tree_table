@@ -1,6 +1,8 @@
 extends Control
 
 
+@export var flip:bool = false: set = _set_flip
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
@@ -10,8 +12,5 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	pass
 
-func flip(v_flip:bool) -> void:
-	$TextureRect.flip_v = v_flip
-
-func visible(visible:bool) -> void:
-	$TextureRect.visible = visible
+func _set_flip(value:bool) -> void:
+	$TextureRect.flip_v = value
