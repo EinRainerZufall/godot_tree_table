@@ -24,7 +24,7 @@ grow_horizontal = 2
 script = ExtResource("1_e8dit")
 header_row = Array[String](["Surname", "Last name", "Age", "Birthday"])
 header_width = Array[int]([0, 0, 0, 0])
-table = Array[Array]([["Anna", "John", "28", "25.04."], ["Wil", "Smith", "22", "01.12."], ["Tim6486468416846846841684168846846844814681", "Potter", "25", "04.08."], ["Jack", "Amber", "19", "12.06."], ["----", "----", "----", "----"]])
+table = Array[Array]([["Anna", "John", "28", "25.04."], ["Wil", "Smith", "22", "01.12."], ["Tim", "Potter", "25", "04.08."], ["Jack", "Amber", "19", "12.06."], ["----", "----", "----", "----"]])
 table_select_mode = 0
 
 [node name="add_btn" type="Button" parent="."]
