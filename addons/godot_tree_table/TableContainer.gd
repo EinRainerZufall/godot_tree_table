@@ -30,7 +30,7 @@ func _ready() -> void:
 	tree.item_selected.connect(get_row_data)
 	tree.item_selected.connect(get_row_index)
 	
-	set_sorter_arrow_position()
+	#set_sorter_arrow_position()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -41,10 +41,9 @@ func _process(_delta) -> void:
 func _init_tree() -> void:
 	tree = $Background/ScrollContainer/Tree
 	background = $Background
-	sam = $SorterArrowManager
 
 
-func set_header(header_row:Array[String]) -> void:
+func set_header_old(header_row:Array[String]) -> void:
 	if header_row.size() < 1:
 		tree.columns = 1
 		tree.set_column_title(0, "")
@@ -57,9 +56,21 @@ func set_header(header_row:Array[String]) -> void:
 		tree.set_column_title_alignment(i, HORIZONTAL_ALIGNMENT_LEFT)
 
 
-func set_table(table:Array[Array], header_size:int) -> void:
+func set_header(header_row:Array[String]) -> void:
 	tree.clear()
+	if header_row.size() < 1:
+		tree.columns = 1
+		return
+	
+	tree.columns = header_row.size()
+	
 	tree_root = tree.create_item()
+	var item:TreeItem = tree.create_item(tree_root)
+	for i:int in header_row.size():
+		item.set_text(i, header_row[i])
+
+
+func set_table(table:Array[Array], header_size:int) -> void:
 	tree.hide_root = true
 	for row:int in table.size():
 		var item:TreeItem = tree.create_item(tree_root)
@@ -89,6 +100,7 @@ func set_stylebox_background(stylebox:StyleBox) -> void:
 
 
 func set_header_stylebox_normal(stylebox:StyleBox) -> void:
+	#TODO
 	if stylebox:
 		tree.add_theme_stylebox_override("title_button_normal", stylebox)
 		return
@@ -96,6 +108,7 @@ func set_header_stylebox_normal(stylebox:StyleBox) -> void:
 
 
 func set_header_stylebox_pressed(stylebox:StyleBox) -> void:
+	#TODO
 	if stylebox:
 		tree.add_theme_stylebox_override("title_button_pressed", stylebox)
 		return
@@ -103,6 +116,7 @@ func set_header_stylebox_pressed(stylebox:StyleBox) -> void:
 
 
 func set_header_stylebox_hover(stylebox:StyleBox) -> void:
+	#TODO
 	if stylebox:
 		tree.add_theme_stylebox_override("title_button_hover", stylebox)
 		return
@@ -110,6 +124,7 @@ func set_header_stylebox_hover(stylebox:StyleBox) -> void:
 
 
 func set_header_width(column:int, width:int) -> void:
+	#TODO
 	tree.set_column_custom_minimum_width(column, width)
 
 
@@ -126,6 +141,7 @@ func set_sorter_arrow_position() -> void:
 
 
 func set_header_font(font:Font) -> void:
+	#TODO
 	if font:
 		tree.add_theme_font_override("title_button_font", font)
 		return
@@ -133,6 +149,7 @@ func set_header_font(font:Font) -> void:
 
 
 func set_header_font_color(color:Color) -> void:
+	#TODO
 	if color:
 		tree.add_theme_color_override("title_button_color", color)
 		return
@@ -208,6 +225,7 @@ func get_row_index() -> void:
 
 
 func on_column_title_clicked(column:int, mouse_button_index:int) -> void:
+	#TODO
 	if mouse_button_index == MOUSE_BUTTON_LEFT or mouse_button_index == MOUSE_BUTTON_RIGHT:
 		var sorted_table:Array[Array] = original_table.duplicate(true)
 		match mouse_button_index:
