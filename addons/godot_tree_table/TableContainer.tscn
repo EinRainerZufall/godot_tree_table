@@ -34,14 +34,8 @@ clip_contents = false
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-column_titles_visible = true
 allow_search = false
 hide_folding = true
 enable_recursive_folding = false
 hide_root = true
 select_mode = 1
-
-[node name="SorterArrowManager" type="Control" parent="."]
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
