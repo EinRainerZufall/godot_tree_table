@@ -30,7 +30,7 @@ signal DOUBLE_CLICK(pos:Vector2i, key:Key)
 ## If active, the _ready function checks whether 'table' has changed, if yes, the table is reloaded
 @export var auto_reload:bool = false
 @export_group("Header")
-@export var header_stylebox_normal:StyleBox: set = _set_header_stylebox_normal
+@export var header_color_normal:Color: set = _set_header_color_normal
 @export var header_stylebox_pressed:StyleBox: set = _set_header_stylebox_pressed
 @export var header_stylebox_hover:StyleBox: set = _set_header_stylebox_hover
 @export_group("Table")
@@ -138,9 +138,9 @@ func _set_stylebox_background(value:StyleBox) -> void:
 	tableContainer.set_stylebox_background(background_stylebox)
 
 
-func _set_header_stylebox_normal(value:StyleBox) -> void:
-	header_stylebox_normal = value
-	tableContainer.set_header_stylebox_normal(header_stylebox_normal)
+func _set_header_color_normal(value:Color) -> void:
+	header_color_normal = value
+	tableContainer.set_header_color_normal(header_color_normal)
 
 
 func _set_header_stylebox_pressed(value:StyleBox) -> void:

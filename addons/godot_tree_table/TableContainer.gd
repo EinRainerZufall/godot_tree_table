@@ -19,6 +19,7 @@ var sort_mode_ascending:bool = true
 
 const SorterArrow:GDScript = preload("res://addons/godot_tree_table/SorterArrow.gd")
 var preload_sorterArrow:PackedScene = preload("res://addons/godot_tree_table/SorterArrow.tscn")
+var arrow_texture:Texture2D = preload("res://addons/godot_tree_table/arrow.svg")
 
 var sorterArrow:SorterArrow
 
@@ -60,6 +61,7 @@ func set_header_old(header_row:Array[String]) -> void:
 
 func set_header(header_row:Array[String]) -> void:
 	tree.clear()
+	tree.hide_root = true
 	if header_row.size() < 1:
 		tree.columns = 1
 		return
@@ -70,15 +72,23 @@ func set_header(header_row:Array[String]) -> void:
 	var item:TreeItem = tree.create_item(tree_root)
 	for i:int in header_row.size():
 		item.set_text(i, header_row[i])
+		item.add_button(i, arrow_texture, 0)
 
 
 func set_table(table:Array[Array], header_size:int) -> void:
-	tree.hide_root = true
+	var child:TreeItem = tree.get_root().get_first_child()
+	child = child.get_next()
+	while child:
+		var next_child:TreeItem = child.get_next()
+		tree.get_root().remove_child(child)
+		child = next_child
+	
 	for row:int in table.size():
 		var item:TreeItem = tree.create_item(tree_root)
 		for column:int in header_size:
 			item.set_text(column, str(table[row][column]))
-			item.set_autowrap_mode(column, TextServer.AUTOWRAP_WORD)
+			#item.set_autowrap_mode(column, TextServer.AUTOWRAP_WORD)
+			item.set_text_overrun_behavior(column, TextServer.OVERRUN_TRIM_WORD)
 
 
 func reload_table(table:Array[Array]) -> void:
@@ -101,12 +111,20 @@ func set_stylebox_background(stylebox:StyleBox) -> void:
 	background.remove_theme_stylebox_override("panel")
 
 
-func set_header_stylebox_normal(stylebox:StyleBox) -> void:
+func set_header_color_normal(color:Color) -> void:
 	#TODO
-	if stylebox:
-		tree.add_theme_stylebox_override("title_button_normal", stylebox)
-		return
-	tree.remove_theme_stylebox_override("title_button_normal")
+	var img:Image = arrow_texture.get_image()
+	for y in range(img.get_height()):
+		for x in range(img.get_width()):
+			if img.get_pixel(x, y).a == 0: # Wenn Pixel transparent
+				img.set_pixel(x, y, color)
+	
+	var new_arrow_texture:Texture2D = ImageTexture.create_from_image(img)
+
+	for i:int in tree.columns:
+		tree.get_root().get_child(0).set_custom_bg_color(i, color)
+		#print(tree.get_root().get_child(0).get_button(i, 0))
+		tree.get_root().get_child(0).set_button(i, 0, new_arrow_texture)
 
 
 func set_header_stylebox_pressed(stylebox:StyleBox) -> void:
