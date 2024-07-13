@@ -23,11 +23,11 @@ offset_bottom = 410.0
 grow_horizontal = 2
 script = ExtResource("1_e8dit")
 header_row = Array[String](["Surname", "Last name", "Age", "Birthday"])
-header_width = Array[int]([0, 0, 0, 0])
-table = Array[Array]([["Anna", "John", "28", "25.04."], ["Wil", "Smith", "22", "01.12."], ["Tim", "Potter", "25", "04.08."], ["Jack", "Amber", "19", "12.06."], ["----", "----", "----", "----"]])
+header_width = Array[int]([150, 200, 75, -1])
+table = Array[Array]([["Anna", "John", "28", "25.04."], ["Will", "Smith", "22", "01.12."], ["Tim", "Potter", "25", "04.08."], ["Jack", "Amber", "19", "12.06."], ["----", "----", "----", "----"]])
 table_select_mode = 0
 table_allow_reselect = true
-header_color_normal = Color(0.772979, 0.348714, 0.464799, 1)
+header_color_normal = Color(0.0562916, 0.0562916, 0.0562916, 1)
 
 [node name="add_btn" type="Button" parent="."]
 layout_mode = 0
