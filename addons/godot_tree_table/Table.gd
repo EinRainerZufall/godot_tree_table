@@ -30,21 +30,22 @@ signal DOUBLE_CLICK(pos:Vector2i, key:Key)
 ## If active, the _ready function checks whether 'table' has changed, if yes, the table is reloaded
 @export var auto_reload:bool = false
 @export_group("Header")
-@export var header_color_normal:Color: set = _set_header_color_normal
-@export var header_stylebox_pressed:StyleBox: set = _set_header_stylebox_pressed
-@export var header_stylebox_hover:StyleBox: set = _set_header_stylebox_hover
+@export var header_color_normal:Color: set = _set_header_color
 @export_group("Table")
 @export var background_stylebox:StyleBox: set = _set_stylebox_background
 @export_group("Font")
 @export var header_font:Font: set = _set_header_font
-@export var header_font_color:Color: set = _set_header_font_color
+@export var header_font_color:Color = Color(0.804, 0.804, 0.804): set = _set_header_font_color
 ## Sets the font size of the table header, if 0 then the default size is used
 @export_range(0, 1, 1, "or_greater") var header_font_size:int: set = _set_header_font_size
 @export var table_font:Font: set = _set_table_font
 @export var table_font_color:Color: set = _set_table_font_color
 ## Sets the font size of the table, if 0 then the default size is used
 @export_range(0, 1, 1, "or_greater") var table_font_size:int: set = _set_table_font_size
-
+@export_group("Sorter Icons")
+@export var no_sorting_texture:Texture2D: set = _set_no_sorting_texture
+@export var ascending_sorting_texture:Texture2D: set = _set_ascending_sorting_texture
+@export var descending_sorting_texture:Texture2D: set = _set_descending_sorting_texture
 
 
 const TableContainer:GDScript = preload("res://addons/godot_tree_table/TableContainer.gd")
@@ -131,6 +132,9 @@ func _set_header_row(value:Array[String]) -> void:
 	tableContainer.set_header(header_row)
 	
 	header_width.resize(header_row.size())
+	for i:int in header_width.size():
+		if typeof(header_width[i]) == TYPE_NIL:
+			header_width[i] = -1
 
 
 func _set_stylebox_background(value:StyleBox) -> void:
@@ -138,19 +142,9 @@ func _set_stylebox_background(value:StyleBox) -> void:
 	tableContainer.set_stylebox_background(background_stylebox)
 
 
-func _set_header_color_normal(value:Color) -> void:
+func _set_header_color(value:Color) -> void:
 	header_color_normal = value
-	tableContainer.set_header_color_normal(header_color_normal)
-
-
-func _set_header_stylebox_pressed(value:StyleBox) -> void:
-	header_stylebox_pressed = value
-	tableContainer.set_header_stylebox_pressed(header_stylebox_pressed)
-
-
-func _set_header_stylebox_hover(value:StyleBox) -> void:
-	header_stylebox_hover = value
-	tableContainer.set_header_stylebox_hover(header_stylebox_hover)
+	tableContainer.set_header_color(header_color_normal)
 
 
 func _set_header_width(value:Array[int]) -> void:
@@ -203,6 +197,24 @@ func _set_table_select_mode(value:select_mode) -> void:
 func _set_table_allow_reselect(value:bool) -> void:
 	table_allow_reselect = value
 	tableContainer.set_allow_reselect(table_allow_reselect)
+
+
+func _set_no_sorting_texture(value:Texture2D) -> void:
+	no_sorting_texture = value
+	if no_sorting_texture:
+		tableContainer.no_sorting_texture = no_sorting_texture
+
+
+func _set_ascending_sorting_texture(value:Texture2D) -> void:
+	ascending_sorting_texture = value
+	if ascending_sorting_texture:
+		tableContainer.ascending_sorting_texture = ascending_sorting_texture
+
+
+func _set_descending_sorting_texture(value:Texture2D) -> void:
+	descending_sorting_texture = value
+	if descending_sorting_texture:
+		tableContainer.descending_sorting_texture = descending_sorting_texture
 
 
 # -- signal functions --
