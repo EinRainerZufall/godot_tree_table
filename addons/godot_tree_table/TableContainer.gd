@@ -25,7 +25,7 @@ var sorterArrow:SorterArrow
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	tree.column_title_clicked.connect(on_column_title_clicked)
+	tree.button_clicked.connect(on_header_button_clicked)
 	
 	tree.cell_selected.connect(get_cell_data)
 	tree.cell_selected.connect(get_cell_pos_selected_cell)
@@ -73,6 +73,7 @@ func set_header(header_row:Array[String]) -> void:
 	for i:int in header_row.size():
 		item.set_text(i, header_row[i])
 		item.add_button(i, arrow_texture, 0)
+		tree.button_clicked.
 
 
 func set_table(table:Array[Array], header_size:int) -> void:
@@ -113,18 +114,9 @@ func set_stylebox_background(stylebox:StyleBox) -> void:
 
 func set_header_color_normal(color:Color) -> void:
 	#TODO
-	var img:Image = arrow_texture.get_image()
-	for y in range(img.get_height()):
-		for x in range(img.get_width()):
-			if img.get_pixel(x, y).a == 0: # Wenn Pixel transparent
-				img.set_pixel(x, y, color)
-	
-	var new_arrow_texture:Texture2D = ImageTexture.create_from_image(img)
-
 	for i:int in tree.columns:
 		tree.get_root().get_child(0).set_custom_bg_color(i, color)
 		#print(tree.get_root().get_child(0).get_button(i, 0))
-		tree.get_root().get_child(0).set_button(i, 0, new_arrow_texture)
 
 
 func set_header_stylebox_pressed(stylebox:StyleBox) -> void:
@@ -217,6 +209,9 @@ func set_allow_reselect(reselect:bool) -> void:
 
 # -- signal functions --
 func get_cell_data() -> void:
+	if tree.get_root().get_children().find(tree.get_selected()) == 0:
+		return
+	
 	CLICK_CELL_DATA.emit(tree.get_selected().get_text(tree.get_selected_column()))
 
 
@@ -225,10 +220,16 @@ func get_cell_pos_selected_cell() -> void:
 	result.x = tree.get_selected_column()
 	result.y = tree.get_root().get_children().find(tree.get_selected())
 	
+	if result.y == 0:
+		return
+	
 	CLICK_CELL_POS.emit(result)
 
 
 func get_row_data() -> void:
+	if tree.get_root().get_children().find(tree.get_selected()) == 0:
+		return
+	
 	var result:Array
 	var sel_item:TreeItem = tree.get_selected()
 	for i:int in tree.columns:
@@ -240,6 +241,9 @@ func get_row_data() -> void:
 func get_row_index() -> void:
 	var result:int = -1
 	result = tree.get_root().get_children().find(tree.get_selected())
+	
+	if result == 0:
+		return
 	
 	CLICK_ROW_INDEX.emit(result)
 
@@ -257,7 +261,7 @@ func get_cell_pos_double_click() -> void:
 	DOUBLE_CLICK.emit(result, key)
 
 
-func on_column_title_clicked(column:int, mouse_button_index:int) -> void:
+func on_header_button_clicked(column:int, mouse_button_index:int) -> void:
 	#TODO
 	if mouse_button_index == MOUSE_BUTTON_LEFT or mouse_button_index == MOUSE_BUTTON_RIGHT:
 		var sorted_table:Array[Array] = original_table.duplicate(true)
