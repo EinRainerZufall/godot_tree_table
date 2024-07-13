@@ -16,24 +16,18 @@ var sam:Control
 var original_table:Array[Array]
 var sort_mode_ascending:bool = true
 
+var no_sorting_texture:Texture2D = preload("res://addons/godot_tree_table/no_sorting.svg")
+var ascending_sorting_texture:Texture2D = preload("res://addons/godot_tree_table/arrow_up.svg")
+var descending_sorting_texture:Texture2D = preload("res://addons/godot_tree_table/arrow_down.svg")
 
 const SorterArrow:GDScript = preload("res://addons/godot_tree_table/SorterArrow.gd")
 var preload_sorterArrow:PackedScene = preload("res://addons/godot_tree_table/SorterArrow.tscn")
-var arrow_texture:Texture2D = preload("res://addons/godot_tree_table/arrow.svg")
 
 var sorterArrow:SorterArrow
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	tree.button_clicked.connect(on_header_button_clicked)
-	
-	tree.cell_selected.connect(get_cell_data)
-	tree.cell_selected.connect(get_cell_pos_selected_cell)
-	tree.item_selected.connect(get_row_data)
-	tree.item_selected.connect(get_row_index)
-	tree.item_activated.connect(get_cell_pos_double_click)
-	
-	#set_sorter_arrow_position()
+	pass
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -44,19 +38,14 @@ func _process(_delta) -> void:
 func _init_tree() -> void:
 	tree = $Background/ScrollContainer/Tree
 	background = $Background
-
-
-func set_header_old(header_row:Array[String]) -> void:
-	if header_row.size() < 1:
-		tree.columns = 1
-		tree.set_column_title(0, "")
-		return
 	
-	tree.columns = header_row.size()
+	tree.button_clicked.connect(on_header_button_clicked)
 	
-	for i:int in header_row.size():
-		tree.set_column_title(i, header_row[i])
-		tree.set_column_title_alignment(i, HORIZONTAL_ALIGNMENT_LEFT)
+	tree.cell_selected.connect(get_cell_data)
+	tree.cell_selected.connect(get_cell_pos_selected_cell)
+	tree.item_selected.connect(get_row_data)
+	tree.item_selected.connect(get_row_index)
+	tree.item_activated.connect(get_cell_pos_double_click)
 
 
 func set_header(header_row:Array[String]) -> void:
@@ -70,10 +59,11 @@ func set_header(header_row:Array[String]) -> void:
 	
 	tree_root = tree.create_item()
 	var item:TreeItem = tree.create_item(tree_root)
-	for i:int in header_row.size():
-		item.set_text(i, header_row[i])
-		item.add_button(i, arrow_texture, 0)
-		tree.button_clicked.
+	for column:int in header_row.size():
+		item.set_text(column, header_row[column])
+		item.add_button(column, no_sorting_texture, 0)
+		tree.set_column_expand(column, false)
+		tree.set_column_clip_content(column, true)
 
 
 func set_table(table:Array[Array], header_size:int) -> void:
@@ -88,8 +78,8 @@ func set_table(table:Array[Array], header_size:int) -> void:
 		var item:TreeItem = tree.create_item(tree_root)
 		for column:int in header_size:
 			item.set_text(column, str(table[row][column]))
-			#item.set_autowrap_mode(column, TextServer.AUTOWRAP_WORD)
-			item.set_text_overrun_behavior(column, TextServer.OVERRUN_TRIM_WORD)
+			item.set_autowrap_mode(column, TextServer.AUTOWRAP_OFF)
+			item.set_text_overrun_behavior(column, TextServer.OVERRUN_TRIM_WORD_ELLIPSIS)
 
 
 func reload_table(table:Array[Array]) -> void:
@@ -112,67 +102,39 @@ func set_stylebox_background(stylebox:StyleBox) -> void:
 	background.remove_theme_stylebox_override("panel")
 
 
-func set_header_color_normal(color:Color) -> void:
+func set_header_color(color:Color) -> void:
 	#TODO
 	for i:int in tree.columns:
 		tree.get_root().get_child(0).set_custom_bg_color(i, color)
-		#print(tree.get_root().get_child(0).get_button(i, 0))
-
-
-func set_header_stylebox_pressed(stylebox:StyleBox) -> void:
-	#TODO
-	if stylebox:
-		tree.add_theme_stylebox_override("title_button_pressed", stylebox)
-		return
-	tree.remove_theme_stylebox_override("title_button_pressed")
-
-
-func set_header_stylebox_hover(stylebox:StyleBox) -> void:
-	#TODO
-	if stylebox:
-		tree.add_theme_stylebox_override("title_button_hover", stylebox)
-		return
-	tree.remove_theme_stylebox_override("title_button_hover")
+		#tree.get_root().get_child(0).get_button(i, 0).
 
 
 func set_header_width(column:int, width:int) -> void:
-	#TODO
+	if width == -1:
+		width = tree.get_root().get_child(0).get_text(column).length() * 15 + 15
+	
 	tree.set_column_custom_minimum_width(column, width)
 
 
-func set_sorter_arrow_position() -> void:
-	var total_position:int = 0
-	for i:int in tree.columns:
-		print("inc. pos: ", tree.get_column_width(i))
-		sorterArrow = preload_sorterArrow.instantiate()
-		sam.add_child(sorterArrow)
-		total_position += tree.get_column_width(i)
-		print("total position: ", total_position)
-		sam.get_child(i).position.x = total_position
-		sam.get_child(i).position.y = tree.get_theme_font_size("title_button_font_size") + 4 #FIXME Magic number
-
-
 func set_header_font(font:Font) -> void:
-	#TODO
 	if font:
-		tree.add_theme_font_override("title_button_font", font)
+		for i:int in tree.columns:
+			tree.get_root().get_child(0).set_custom_font(i, font)
 		return
-	tree.remove_theme_font_override("title_button_font")
+	for i:int in tree.columns:
+		tree.get_root().get_child(0).set_custom_font(i, SystemFont.new())
 
 
 func set_header_font_color(color:Color) -> void:
-	#TODO
 	if color:
-		tree.add_theme_color_override("title_button_color", color)
+		for i:int in tree.columns:
+			tree.get_root().get_child(0).set_custom_color(i, color)
 		return
-	tree.remove_theme_color_override("title_button_color")
 
 
 func set_header_font_size(size:int) -> void:
-	if size and size > 0:
-		tree.add_theme_font_size_override("title_button_font_size", size)
-		return
-	tree.remove_theme_font_size_override("title_button_font_size")
+	for i:int in tree.columns:
+		tree.get_root().get_child(0).set_custom_font_size(i, size)
 
 
 func set_table_font(font:Font) -> void:
@@ -261,21 +223,27 @@ func get_cell_pos_double_click() -> void:
 	DOUBLE_CLICK.emit(result, key)
 
 
-func on_header_button_clicked(column:int, mouse_button_index:int) -> void:
-	#TODO
+func on_header_button_clicked(item:TreeItem, column:int, id:int, mouse_button_index:int) -> void:
 	if mouse_button_index == MOUSE_BUTTON_LEFT or mouse_button_index == MOUSE_BUTTON_RIGHT:
-		var sorted_table:Array[Array] = original_table.duplicate(true)
-		match mouse_button_index:
-			MOUSE_BUTTON_LEFT:
-				if sort_mode_ascending:
-					sorted_table.sort_custom(custom_sorter_ascending.bind(column))
-				else:
-					sorted_table.sort_custom(custom_sorter_descending.bind(column))
-				sort_mode_ascending = !sort_mode_ascending
-				set_table(sorted_table, tree.columns)
-			MOUSE_BUTTON_RIGHT:
-				sort_mode_ascending = true
-				set_table(original_table, tree.columns)
+		if id == 0: # sorting button is always ID 0
+			var sorted_table:Array[Array] = original_table.duplicate(true)
+			var texture:Texture2D = no_sorting_texture
+			match  mouse_button_index:
+				MOUSE_BUTTON_LEFT:
+					if sort_mode_ascending:
+						sorted_table.sort_custom(custom_sorter_ascending.bind(column))
+						texture = ascending_sorting_texture
+					else:
+						sorted_table.sort_custom(custom_sorter_descending.bind(column))
+						texture = descending_sorting_texture
+					sort_mode_ascending = !sort_mode_ascending
+					set_table(sorted_table, tree.columns)
+				MOUSE_BUTTON_RIGHT:
+					sort_mode_ascending = true
+					set_table(original_table, tree.columns)
+			for i:int in tree.columns:
+				item.set_button(i, id, no_sorting_texture)
+			item.set_button(column, id, texture)
 
 
 # -- custom sorter --
