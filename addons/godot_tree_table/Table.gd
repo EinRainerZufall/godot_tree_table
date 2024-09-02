@@ -7,7 +7,7 @@ signal CLICK_CELL_DATE(cell:String)
 signal CLICK_CELL_POS(pos:Vector2i)
 signal CLICK_ROW(row:Array)
 signal CLICK_ROW_INDEX(index:int)
-signal DOUBLE_CLICK(pos:Vector2i)
+signal DOUBLE_CLICK(pos:Vector2i, key:Key)
 
 # user settings
 @export var header_row:Array[String]: set = _set_header_row
@@ -207,5 +207,5 @@ func _on_click_cell_pos(result:Vector2i) -> void:
 func _on_click_row_index(result:int) -> void:
 	CLICK_ROW_INDEX.emit(result)
 
-func _on_double_click(result:Vector2i) -> void:
-	DOUBLE_CLICK.emit(result)
+func _on_double_click(result:Vector2i, key:Key) -> void:
+	DOUBLE_CLICK.emit(result, key)
