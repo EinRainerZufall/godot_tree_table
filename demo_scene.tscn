@@ -72,6 +72,7 @@ text = "apped array"
 [connection signal="CLICK_CELL_POS" from="Table" to="." method="_on_table_click_cell_pos"]
 [connection signal="CLICK_ROW" from="Table" to="." method="_on_table_click_row"]
 [connection signal="CLICK_ROW_INDEX" from="Table" to="." method="_on_table_click_row_index"]
+[connection signal="DOUBLE_CLICK" from="Table" to="." method="_on_table_double_click"]
 [connection signal="pressed" from="add_btn" to="." method="_on_add_btn_pressed"]
 [connection signal="pressed" from="remove_last_btn" to="." method="_on_remove_last_btn_pressed"]
 [connection signal="pressed" from="remove_row_at_btn" to="." method="_on_remove_row_at_btn_pressed"]
