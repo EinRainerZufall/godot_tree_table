@@ -68,7 +68,7 @@ offset_right = 956.0
 offset_bottom = 580.0
 text = "apped array"
 
-[connection signal="CLICK_CELL_DATE" from="Table" to="." method="_on_table_click_cell_date"]
+[connection signal="CLICK_CELL_DATA" from="Table" to="." method="_on_table_click_cell_data"]
 [connection signal="CLICK_CELL_POS" from="Table" to="." method="_on_table_click_cell_pos"]
 [connection signal="CLICK_ROW" from="Table" to="." method="_on_table_click_row"]
 [connection signal="CLICK_ROW_INDEX" from="Table" to="." method="_on_table_click_row_index"]

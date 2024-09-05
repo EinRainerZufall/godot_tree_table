@@ -36,7 +36,7 @@ func _on_remove_row_at_btn_pressed():
 	$Table.remove_row_at($index_input.value)
 
 
-func _on_table_click_cell_date(cell:String):
+func _on_table_click_cell_data(cell:String):
 	print("This is the Text of the selected cell: ", cell)
 
 

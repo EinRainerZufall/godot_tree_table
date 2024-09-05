@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-signal CLICK_CELL_DATE(cell:String)
+signal CLICK_CELL_DATA(cell:String)
 signal CLICK_CELL_POS(pos:Vector2i)
 signal CLICK_ROW(row:Array)
 signal CLICK_ROW_INDEX(index:int)
@@ -158,7 +158,7 @@ func set_allow_reselect(reselect:bool) -> void:
 
 # -- signal functions --
 func get_cell_data() -> void:
-	CLICK_CELL_DATE.emit(tree.get_selected().get_text(tree.get_selected_column()))
+	CLICK_CELL_DATA.emit(tree.get_selected().get_text(tree.get_selected_column()))
 
 
 func get_cell_pos() -> void:
