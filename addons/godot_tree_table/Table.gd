@@ -3,9 +3,15 @@ extends PanelContainer
 
 enum select_mode {CELL, ROW}
 
-signal CLICK_CELL_DATE(cell:String)
+## Emitted when a cell is selected. [param cell] is the text.[br]
+## [color=yellow]Important:[/color] it can only be used if [code]table_select_mode[/code] is set to [code]CELL[/code].
+signal CLICK_CELL_DATA(cell:String)
+## Emitted when a cell is selected. [param pos] is the position.[br]
+## [color=yellow]Important:[/color] it can only be used if [code]table_select_mode[/code] is set to [code]CELL[/code].
 signal CLICK_CELL_POS(pos:Vector2i)
+## Emitted when when a row is selected. [param row] is the row as an array of strings.
 signal CLICK_ROW(row:Array)
+## Emitted when when a row is selected. [param index] is the index of the row, whereby the header row does not count and the first row of the table is 0.
 signal CLICK_ROW_INDEX(index:int)
 
 # user settings
@@ -54,7 +60,7 @@ func _init_tree() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	tableContainer.CLICK_CELL_DATE.connect(_on_click_cell_data)
+	tableContainer.CLICK_CELL_DATA.connect(_on_click_cell_data)
 	tableContainer.CLICK_CELL_POS.connect(_on_click_cell_pos)
 	tableContainer.CLICK_ROW.connect(_on_click_row)
 	tableContainer.CLICK_ROW_INDEX.connect(_on_click_row_index)
@@ -194,7 +200,7 @@ func _set_table_allow_reselect(value:bool) -> void:
 
 # -- signal functions --
 func _on_click_cell_data(result:String) -> void:
-	CLICK_CELL_DATE.emit(result)
+	CLICK_CELL_DATA.emit(result)
 
 func _on_click_row(result:Array) -> void:
 	CLICK_ROW.emit(result)
