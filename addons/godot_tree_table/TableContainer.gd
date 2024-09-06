@@ -5,7 +5,7 @@ signal CLICK_CELL_DATA(cell:String)
 signal CLICK_CELL_POS(pos:Vector2i)
 signal CLICK_ROW(row:Array)
 signal CLICK_ROW_INDEX(index:int)
-signal DOUBLE_CLICK(pos:Vector2i, key:Key)
+signal DOUBLE_CLICK(pos:Vector2i, key:Key, is_header:bool)
 
 
 var tree:Tree
@@ -211,16 +211,19 @@ func get_row_index() -> void:
 
 
 func get_cell_pos_double_click() -> void:
-	var result:Vector2i = Vector2i(-1, -1)
+	var result:Vector2i = Vector2i.ZERO
 	var key:Key = KEY_NONE
+	var is_header:bool = false
 	if Input.is_key_pressed(KEY_ENTER):
 		key = KEY_ENTER
 	if Input.is_key_pressed(KEY_SPACE):
 		key = KEY_SPACE
 	result.x = tree.get_selected_column()
-	result.y = tree.get_root().get_children().find(tree.get_selected())
+	result.y = tree.get_root().get_children().find(tree.get_selected()) - 1
+	if result.y == -1:
+		is_header = true
 	
-	DOUBLE_CLICK.emit(result, key)
+	DOUBLE_CLICK.emit(result, key, is_header)
 
 
 func on_header_button_clicked(item:TreeItem, column:int, id:int, mouse_button_index:int) -> void:

@@ -56,7 +56,8 @@ func _on_auto_reload_test_btn_pressed() -> void:
 	a.append(["Spawn", "a", "new", "line"])
 
 
-func _on_table_double_click(pos: Vector2i, key:Key) -> void:
+func _on_table_double_click(pos: Vector2i, key:Key, is_header:bool) -> void:
 	print("This is the Vector2i of the double clicked cell: ", pos)
-	print("And the cell value ist: ", $Table.table[pos.y][pos.x])
+	print("And the cell value ist: ", $Table.get_value_at(pos))
 	print("The pressed key was: ", key)
+	print("Is the selected cell a header: ", is_header)

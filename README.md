@@ -34,6 +34,12 @@ func remove_row_at(index:int) -> void:
 ```
 Deletes the row at the specified `index` (0 based). A positive index is counted from the beginning, a negative index is counted from the end. Returns an error if the specified index does not exist.
 
+### get_value_at
+```GDscript
+func get_value_at(pos:Vector2i) -> String:
+```
+Returns the text of the cell at the given position.
+
 ### reload_table
 ```GDscript
 func reload_table() -> void:

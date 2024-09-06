@@ -13,12 +13,12 @@ signal CLICK_CELL_POS(pos:Vector2i)
 signal CLICK_ROW(row:Array)
 ## Emitted when when a row is selected. [param index] is the index of the row, whereby the header row does not count and the first row of the table is 0.
 signal CLICK_ROW_INDEX(index:int)
-## Emitted when a cell is double clicked. [param pos] is the position of the cell.[br]
+## Emitted when a cell is double clicked. [param pos] is the position of the cell.[param is_header] indicates whether the selected cell is in the header row[br]
 ## [param key] is the type of activation.[br]
 ## Double-click is [code]KEY_NONE[/code][br]
 ## Enter key is [code]KEY_ENTER[/code][br]
 ## Space bar is [code]KEY_SPACE[/code][br]
-signal DOUBLE_CLICK(pos:Vector2i, key:Key)
+signal DOUBLE_CLICK(pos:Vector2i, key:Key, is_header:bool)
 
 # user settings
 @export var header_row:Array[String]: set = _set_header_row
@@ -120,6 +120,15 @@ func remove_row_at(index:int) -> void:
 	else:
 		table.remove_at(index)
 	set_table(table)
+
+## Returns the text of the cell at the given position.
+func get_value_at(pos:Vector2i) -> String:
+	var result:String
+	if pos.y == -1:
+		result = header_row[pos.x]
+		return result
+	result = table[pos.y][pos.x]
+	return result
 
 ## Reloads the table
 func reload_table() -> void:
@@ -230,5 +239,5 @@ func _on_click_cell_pos(result:Vector2i) -> void:
 func _on_click_row_index(result:int) -> void:
 	CLICK_ROW_INDEX.emit(result)
 
-func _on_double_click(result:Vector2i, key:Key) -> void:
-	DOUBLE_CLICK.emit(result, key)
+func _on_double_click(result:Vector2i, key:Key, is_header:bool) -> void:
+	DOUBLE_CLICK.emit(result, key, is_header)
