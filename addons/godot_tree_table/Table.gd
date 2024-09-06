@@ -18,7 +18,6 @@ signal CLICK_ROW_INDEX(index:int)
 ## Double-click is [code]KEY_NONE[/code][br]
 ## Enter key is [code]KEY_ENTER[/code][br]
 ## Space bar is [code]KEY_SPACE[/code][br]
-## [color=yellow]Important:[/color] it can only be used if [code]table_select_mode[/code] is set to [code]CELL[/code].
 signal DOUBLE_CLICK(pos:Vector2i, key:Key)
 
 # user settings
