@@ -47,6 +47,7 @@ signal CLICK_CELL_DATE(cell:String)
 signal CLICK_CELL_POS(pos:Vector2i)
 signal CLICK_ROW(row:Array)
 signal CLICK_ROW_INDEX(index:int)
+signal DOUBLE_CLICK(pos:Vector2i, key:Key)
 ```
-The CELL signals are only available if the `table_select_mode` is set to Cell
+The CELL signals are only available if the `table_select_mode` is set to `CELL`
 
