@@ -43,7 +43,7 @@ Reloads the table. The manual way if the array that was set with `set_table` has
 ## Signals
 Available signals
 ```GDscript
-signal CLICK_CELL_DATE(cell:String)
+signal CLICK_CELL_DATA(cell:String)
 signal CLICK_CELL_POS(pos:Vector2i)
 signal CLICK_ROW(row:Array)
 signal CLICK_ROW_INDEX(index:int)
