@@ -27,7 +27,7 @@ header_width = Array[int]([150, 200, 75, -1])
 table = Array[Array]([["Anna", "John", "28", "25.04."], ["Will", "Smith", "22", "01.12."], ["Tim", "Potter", "25", "04.08."], ["Jack", "Amber", "19", "12.06."], ["----", "----", "----", "----"]])
 table_select_mode = 0
 table_allow_reselect = true
-header_color_normal = Color(0.0562916, 0.0562916, 0.0562916, 1)
+header_color = Color(0.36702, 0.34604, 0.0591146, 1)
 
 [node name="add_btn" type="Button" parent="."]
 layout_mode = 0

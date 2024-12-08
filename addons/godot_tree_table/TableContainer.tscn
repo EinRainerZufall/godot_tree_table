@@ -13,6 +13,7 @@ offset_bottom = 200.0
 script = ExtResource("1_xwaql")
 
 [node name="Background" type="Panel" parent="."]
+clip_contents = true
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -28,14 +29,31 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+vertical_scroll_mode = 3
 
-[node name="Tree" type="Tree" parent="Background/ScrollContainer"]
-clip_contents = false
+[node name="VBoxContainer" type="VBoxContainer" parent="Background/ScrollContainer"]
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Header" type="Tree" parent="Background/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+allow_search = false
+hide_folding = true
+enable_recursive_folding = false
+hide_root = true
+scroll_horizontal_enabled = false
+scroll_vertical_enabled = false
+
+[node name="Table" type="Tree" parent="Background/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
 size_flags_vertical = 3
 allow_search = false
 hide_folding = true
 enable_recursive_folding = false
 hide_root = true
 select_mode = 1
+scroll_horizontal_enabled = false

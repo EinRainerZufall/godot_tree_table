@@ -14,7 +14,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
-	$index_input.max_value = $Table.table.size() - 1
+	$index_input.max_value = $Table.table.size() -1
 
 
 func _on_add_btn_pressed():
