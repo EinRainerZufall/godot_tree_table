@@ -1,11 +1,10 @@
 @tool
 extends Control
 
-signal CLICK_CELL_DATA(cell:String)
+signal CLICK_CELL_DATE(cell:String)
 signal CLICK_CELL_POS(pos:Vector2i)
 signal CLICK_ROW(row:Array)
 signal CLICK_ROW_INDEX(index:int)
-signal DOUBLE_CLICK(pos:Vector2i, key:Key)
 
 
 var tree:Tree
@@ -21,10 +20,9 @@ func _ready() -> void:
 	tree.column_title_clicked.connect(on_column_title_clicked)
 	
 	tree.cell_selected.connect(get_cell_data)
-	tree.cell_selected.connect(get_cell_pos_selected_cell)
+	tree.cell_selected.connect(get_cell_pos)
 	tree.item_selected.connect(get_row_data)
 	tree.item_selected.connect(get_row_index)
-	tree.item_activated.connect(get_cell_pos_double_click)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -160,10 +158,10 @@ func set_allow_reselect(reselect:bool) -> void:
 
 # -- signal functions --
 func get_cell_data() -> void:
-	CLICK_CELL_DATA.emit(tree.get_selected().get_text(tree.get_selected_column()))
+	CLICK_CELL_DATE.emit(tree.get_selected().get_text(tree.get_selected_column()))
 
 
-func get_cell_pos_selected_cell() -> void:
+func get_cell_pos() -> void:
 	var result:Vector2i = Vector2i(-1, -1)
 	result.x = tree.get_selected_column()
 	result.y = tree.get_root().get_children().find(tree.get_selected())
@@ -187,19 +185,6 @@ func get_row_index() -> void:
 	CLICK_ROW_INDEX.emit(result)
 
 
-func get_cell_pos_double_click() -> void:
-	var result:Vector2i = Vector2i(-1, -1)
-	var key:Key = KEY_NONE
-	if Input.is_key_pressed(KEY_ENTER):
-		key = KEY_ENTER
-	if Input.is_key_pressed(KEY_SPACE):
-		key = KEY_SPACE
-	result.x = tree.get_selected_column()
-	result.y = tree.get_root().get_children().find(tree.get_selected())
-	
-	DOUBLE_CLICK.emit(result, key)
-
-
 func on_column_title_clicked(column:int, mouse_button_index:int) -> void:
 	if mouse_button_index == MOUSE_BUTTON_LEFT or mouse_button_index == MOUSE_BUTTON_RIGHT:
 		var sorted_table:Array[Array] = original_table.duplicate(true)
@@ -218,15 +203,37 @@ func on_column_title_clicked(column:int, mouse_button_index:int) -> void:
 
 # -- custom sorter --
 static func custom_sorter_ascending(a, b, column:int) -> bool:
-	if a[column] == "----":
+	# Handle placeholder values
+	if str(a[column]) == "----":
 		return false
-	if a[column] <= b[column]:
+	if str(b[column]) == "----":
 		return true
-	return false
+	
+	# If both values can be converted to floats, compare them as numbers
+	if a[column] is String and b[column] is String:
+		var a_float = a[column].to_float() if a[column].is_valid_float() else null
+		var b_float = b[column].to_float() if b[column].is_valid_float() else null
+		
+		if a_float != null and b_float != null:
+			return a_float <= b_float
+	
+	# For any other case (mixed types or non-numeric strings), convert to string and compare
+	return str(a[column]) <= str(b[column])
 
 static func custom_sorter_descending(a, b, column:int) -> bool:
-	if a[column] == "----":
+	# Handle placeholder values
+	if str(a[column]) == "----":
 		return false
-	if a[column] >= b[column]:
+	if str(b[column]) == "----":
 		return true
-	return false
+	
+	# If both values can be converted to floats, compare them as numbers
+	if a[column] is String and b[column] is String:
+		var a_float = a[column].to_float() if a[column].is_valid_float() else null
+		var b_float = b[column].to_float() if b[column].is_valid_float() else null
+		
+		if a_float != null and b_float != null:
+			return a_float >= b_float
+	
+	# For any other case (mixed types or non-numeric strings), convert to string and compare
+	return str(a[column]) >= str(b[column])

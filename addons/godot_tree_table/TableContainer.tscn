@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://ul7sjn77s6dl"]
 
-[ext_resource type="Script" path="res://addons/godot_tree_table/TableContainer.gd" id="1_xwaql"]
+[ext_resource type="Script" uid="uid://cu4bsqyrv2nos" path="res://addons/godot_tree_table/TableContainer.gd" id="1_xwaql"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7aqfw"]
 bg_color = Color(0.18, 0.18, 0.18, 1)

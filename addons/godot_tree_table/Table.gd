@@ -1,24 +1,13 @@
 @tool
 extends PanelContainer
+class_name Table
 
 enum select_mode {CELL, ROW}
 
-## Emitted when a cell is selected. [param cell] is the text.[br]
-## [color=yellow]Important:[/color] it can only be used if [code]table_select_mode[/code] is set to [code]CELL[/code].
-signal CLICK_CELL_DATA(cell:String)
-## Emitted when a cell is selected. [param pos] is the position.[br]
-## [color=yellow]Important:[/color] it can only be used if [code]table_select_mode[/code] is set to [code]CELL[/code].
+signal CLICK_CELL_DATE(cell:String)
 signal CLICK_CELL_POS(pos:Vector2i)
-## Emitted when when a row is selected. [param row] is the row as an array of strings.
 signal CLICK_ROW(row:Array)
-## Emitted when when a row is selected. [param index] is the index of the row, whereby the header row does not count and the first row of the table is 0.
 signal CLICK_ROW_INDEX(index:int)
-## Emitted when a cell is double clicked. [param pos] is the position of the cell.[br]
-## [param key] is the type of activation.[br]
-## Double-click is [code]KEY_NONE[/code][br]
-## Enter key is [code]KEY_ENTER[/code][br]
-## Space bar is [code]KEY_SPACE[/code][br]
-signal DOUBLE_CLICK(pos:Vector2i, key:Key)
 
 # user settings
 @export var header_row:Array[String]: set = _set_header_row
@@ -66,11 +55,10 @@ func _init_tree() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	tableContainer.CLICK_CELL_DATA.connect(_on_click_cell_data)
+	tableContainer.CLICK_CELL_DATE.connect(_on_click_cell_data)
 	tableContainer.CLICK_CELL_POS.connect(_on_click_cell_pos)
 	tableContainer.CLICK_ROW.connect(_on_click_row)
 	tableContainer.CLICK_ROW_INDEX.connect(_on_click_row_index)
-	tableContainer.DOUBLE_CLICK.connect(_on_double_click)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -123,6 +111,14 @@ func remove_row_at(index:int) -> void:
 ## Reloads the table
 func reload_table() -> void:
 	tableContainer.reload_table(table)
+
+## Returns the data of a row at the specified index
+## Returns an empty array if the index is out of bounds
+func get_row_by_index(index: int) -> Array:
+	if index < 0 or index >= table.size():
+		push_warning("Error: Index pos = %d is out of bounds (size() = %d)." % [index, table.size()])
+		return []
+	return table[index].duplicate()
 
 
 # -- Inernal funtions --
@@ -207,7 +203,7 @@ func _set_table_allow_reselect(value:bool) -> void:
 
 # -- signal functions --
 func _on_click_cell_data(result:String) -> void:
-	CLICK_CELL_DATA.emit(result)
+	CLICK_CELL_DATE.emit(result)
 
 func _on_click_row(result:Array) -> void:
 	CLICK_ROW.emit(result)
@@ -217,6 +213,3 @@ func _on_click_cell_pos(result:Vector2i) -> void:
 
 func _on_click_row_index(result:int) -> void:
 	CLICK_ROW_INDEX.emit(result)
-
-func _on_double_click(result:Vector2i, key:Key) -> void:
-	DOUBLE_CLICK.emit(result, key)
