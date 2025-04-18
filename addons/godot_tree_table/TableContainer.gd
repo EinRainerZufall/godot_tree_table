@@ -1,10 +1,11 @@
 @tool
 extends Control
 
-signal CLICK_CELL_DATE(cell:String)
+signal CLICK_CELL_DATA(cell:String)
 signal CLICK_CELL_POS(pos:Vector2i)
 signal CLICK_ROW(row:Array)
 signal CLICK_ROW_INDEX(index:int)
+signal DOUBLE_CLICK(pos:Vector2i, key:Key)
 
 
 var tree:Tree
@@ -20,9 +21,10 @@ func _ready() -> void:
 	tree.column_title_clicked.connect(on_column_title_clicked)
 	
 	tree.cell_selected.connect(get_cell_data)
-	tree.cell_selected.connect(get_cell_pos)
+	tree.cell_selected.connect(get_cell_pos_selected_cell)
 	tree.item_selected.connect(get_row_data)
 	tree.item_selected.connect(get_row_index)
+	tree.item_activated.connect(get_cell_pos_double_click)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -158,15 +160,28 @@ func set_allow_reselect(reselect:bool) -> void:
 
 # -- signal functions --
 func get_cell_data() -> void:
-	CLICK_CELL_DATE.emit(tree.get_selected().get_text(tree.get_selected_column()))
+	CLICK_CELL_DATA.emit(tree.get_selected().get_text(tree.get_selected_column()))
 
 
-func get_cell_pos() -> void:
+func get_cell_pos_selected_cell() -> void:
 	var result:Vector2i = Vector2i(-1, -1)
 	result.x = tree.get_selected_column()
 	result.y = tree.get_root().get_children().find(tree.get_selected())
 	
 	CLICK_CELL_POS.emit(result)
+
+
+func get_cell_pos_double_click() -> void:
+	var result:Vector2i = Vector2i(-1, -1)
+	var key:Key = KEY_NONE
+	if Input.is_key_pressed(KEY_ENTER):
+		key = KEY_ENTER
+	if Input.is_key_pressed(KEY_SPACE):
+		key = KEY_SPACE
+	result.x = tree.get_selected_column()
+	result.y = tree.get_root().get_children().find(tree.get_selected())
+	
+	DOUBLE_CLICK.emit(result, key)
 
 
 func get_row_data() -> void:

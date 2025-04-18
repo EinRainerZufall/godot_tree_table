@@ -4,10 +4,18 @@ class_name Table
 
 enum select_mode {CELL, ROW}
 
-signal CLICK_CELL_DATE(cell:String)
+signal CLICK_CELL_DATA(cell:String)
 signal CLICK_CELL_POS(pos:Vector2i)
 signal CLICK_ROW(row:Array)
+## Emitted when when a row is selected. [param index] is the index of the row, whereby the header row does not count and the first row of the table is 0.
 signal CLICK_ROW_INDEX(index:int)
+## Emitted when a cell is double clicked. [param pos] is the position of the cell.[br]
+## [param key] is the type of activation.[br]
+## Double-click is [code]KEY_NONE[/code][br]
+## Enter key is [code]KEY_ENTER[/code][br]
+## Space bar is [code]KEY_SPACE[/code][br]
+## [color=yellow]Important:[/color] it can only be used if [code]table_select_mode[/code] is set to [code]CELL[/code].
+signal DOUBLE_CLICK(pos:Vector2i, key:Key)
 
 # user settings
 @export var header_row:Array[String]: set = _set_header_row
@@ -55,10 +63,11 @@ func _init_tree() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	tableContainer.CLICK_CELL_DATE.connect(_on_click_cell_data)
+	tableContainer.CLICK_CELL_DATA.connect(_on_click_cell_data)
 	tableContainer.CLICK_CELL_POS.connect(_on_click_cell_pos)
 	tableContainer.CLICK_ROW.connect(_on_click_row)
 	tableContainer.CLICK_ROW_INDEX.connect(_on_click_row_index)
+	tableContainer.DOUBLE_CLICK.connect(_on_double_click)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -203,7 +212,7 @@ func _set_table_allow_reselect(value:bool) -> void:
 
 # -- signal functions --
 func _on_click_cell_data(result:String) -> void:
-	CLICK_CELL_DATE.emit(result)
+	CLICK_CELL_DATA.emit(result)
 
 func _on_click_row(result:Array) -> void:
 	CLICK_ROW.emit(result)
@@ -213,3 +222,6 @@ func _on_click_cell_pos(result:Vector2i) -> void:
 
 func _on_click_row_index(result:int) -> void:
 	CLICK_ROW_INDEX.emit(result)
+
+func _on_double_click(result:Vector2i, key:Key) -> void:
+	DOUBLE_CLICK.emit(result, key)
