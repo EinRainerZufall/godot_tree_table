@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://biqxo61i0srac"]
 
-[ext_resource type="Script" path="res://demo_scene.gd" id="1_8s7co"]
-[ext_resource type="Script" path="res://addons/godot_tree_table/Table.gd" id="1_e8dit"]
+[ext_resource type="Script" uid="uid://dcokm2144jult" path="res://demo_scene.gd" id="1_8s7co"]
+[ext_resource type="Script" uid="uid://docg1y8vc4mf2" path="res://addons/godot_tree_table/Table.gd" id="1_e8dit"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
