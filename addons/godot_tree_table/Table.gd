@@ -4,8 +4,13 @@ class_name Table
 
 enum select_mode {CELL, ROW}
 
+## Emitted when a cell is selected. [param cell] is the text.[br]
+## [color=yellow]Important:[/color] it can only be used if [code]table_select_mode[/code] is set to [code]CELL[/code].
 signal CLICK_CELL_DATA(cell:String)
+## Emitted when a cell is selected. [param pos] is the position.[br]
+## [color=yellow]Important:[/color] it can only be used if [code]table_select_mode[/code] is set to [code]CELL[/code].
 signal CLICK_CELL_POS(pos:Vector2i)
+## Emitted when when a row is selected. [param row] is the row as an array.
 signal CLICK_ROW(row:Array)
 ## Emitted when when a row is selected. [param index] is the index of the row, whereby the header row does not count and the first row of the table is 0.
 signal CLICK_ROW_INDEX(index:int)
